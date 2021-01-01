@@ -15,8 +15,18 @@
 
     * **logstash.conf**
 
-            file {
-                    start_position => "beginning"
-                    path => "/usr/share/logstash/external-data/data.csv"
-                    sincedb_path => "/dev/null" 
-            }
+                input {
+                        file {
+                                start_position => "beginning"
+                                path => "/usr/share/logstash/external-data/data.csv"
+                                sincedb_path => "/dev/null" 
+                        }
+                }
+                filter {
+                csv {
+                                columns => ["orderId","orderGUID","orderPaymentAmount","orderDate","orderPaymentType","latitude","longitude"]
+                        }
+                        mutate{
+                                remove_field => ["message","host","@timestamp","path","@version"]
+                        }
+                }
